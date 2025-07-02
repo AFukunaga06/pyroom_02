@@ -239,7 +239,7 @@ function App() {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              PyRoom Web Application - JANコード管理システム
+              JANコード管理システム
             </CardTitle>
           </CardHeader>
           <CardContent>
