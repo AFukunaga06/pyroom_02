@@ -111,3 +111,25 @@ class FileRepository:
             logger.info("Coordinates and content saved")
         except Exception as e:
             raise FileOperationError(f"Failed to save coordinates: {str(e)}")
+    
+    def file_exists(self, file_type: str) -> bool:
+        """指定されたファイルが存在するかチェック"""
+        file_map = {
+            'input': self.config.input_path,
+            'output': self.config.output_path,
+            'checkd01': self.config.checkd01_path,
+            'checkd02': self.config.checkd02_path
+        }
+        
+        if file_type in file_map:
+            return os.path.exists(file_map[file_type])
+        return False
+    
+    def read_input_data(self) -> List[str]:
+        """input.txtのデータを行ごとに読み取り"""
+        try:
+            with open(self.config.input_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            return [line.strip() for line in lines if line.strip()]
+        except Exception as e:
+            raise FileOperationError(f"Failed to read input data: {str(e)}")

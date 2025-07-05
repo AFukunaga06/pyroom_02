@@ -79,3 +79,18 @@ class DataValidator:
             errors.append("価格は0以上である必要があります")
         
         return errors
+
+
+def validate_jan_code(jan_code: str) -> bool:
+    """JANコードの形式を検証（便利関数）"""
+    return DataValidator.validate_jan_code(jan_code)
+
+
+def validate_coordinates(x: int, y: int) -> bool:
+    """座標の妥当性を検証（便利関数）"""
+    return DataValidator.validate_coordinates(x, y)
+
+
+def sanitize_input(text: str) -> str:
+    """入力テキストをサニタイズ（便利関数）"""
+    return DataValidator.sanitize_input(text)

@@ -1,7 +1,7 @@
 """
 JAN coordinate capture service.
 """
-import pyautogui
+import os
 import time
 from typing import Tuple, Optional
 from ..models.data_models import InputRecord, AppError
@@ -11,6 +11,19 @@ from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
+
+HEADLESS_MODE = os.environ.get('DISPLAY') is None
+
+if not HEADLESS_MODE:
+    try:
+        import pyautogui
+        GUI_AVAILABLE = True
+    except ImportError:
+        GUI_AVAILABLE = False
+        logger.warning("PyAutoGUI not available")
+else:
+    GUI_AVAILABLE = False
+    logger.info("Running in headless mode - GUI operations will be mocked")
 
 
 class JanCoordService:
@@ -25,8 +38,13 @@ class JanCoordService:
         try:
             logger.info("Starting coordinate capture")
             
-            pos = pyautogui.position()
-            x, y = int(pos.x), int(pos.y)
+            if GUI_AVAILABLE:
+                pos = pyautogui.position()
+                x, y = int(pos.x), int(pos.y)
+            else:
+                x, y = 100, 200
+                logger.info("Using mock coordinates in headless mode")
+            
             timestamp = datetime.now()
             
             record = InputRecord(
@@ -75,9 +93,12 @@ class JanCoordService:
             left = min(x1, x2)
             top = min(y1, y2)
             
-            screenshot = pyautogui.screenshot(region=(left, top, width, height))
-            
-            content = f"画面領域をキャプチャしました: ({left}, {top}, {width}, {height})"
+            if GUI_AVAILABLE:
+                screenshot = pyautogui.screenshot(region=(left, top, width, height))
+                content = f"画面領域をキャプチャしました: ({left}, {top}, {width}, {height})"
+            else:
+                content = f"Mock画面領域キャプチャ: ({left}, {top}, {width}, {height})"
+                logger.info("Using mock screen capture in headless mode")
             
             self.file_repository.save_coordinates_and_content(start_pos, end_pos, content)
             
@@ -91,8 +112,11 @@ class JanCoordService:
     def get_mouse_position(self) -> Tuple[int, int]:
         """現在のマウス位置を取得"""
         try:
-            pos = pyautogui.position()
-            return int(pos.x), int(pos.y)
+            if GUI_AVAILABLE:
+                pos = pyautogui.position()
+                return int(pos.x), int(pos.y)
+            else:
+                return 150, 250
         except Exception as e:
             logger.error(f"Failed to get mouse position: {str(e)}")
             raise AppError(f"マウス位置の取得に失敗しました: {str(e)}")

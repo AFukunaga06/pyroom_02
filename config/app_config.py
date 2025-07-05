@@ -81,3 +81,8 @@ class AppConfig:
             google_credentials_path=cls.DEFAULT_CONFIG['google_credentials_path'],
             spreadsheet_id=cls.DEFAULT_CONFIG['spreadsheet_id']
         )
+
+
+def load_config(config_file: str = 'config/config.json') -> Config:
+    """設定ファイルから設定を読み込み（便利関数）"""
+    return AppConfig.load_config(config_file)

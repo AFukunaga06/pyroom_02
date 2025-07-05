@@ -1,13 +1,26 @@
 """
 Coordinate capture utility.
 """
-import pyautogui
+import os
 import time
 from typing import Tuple, Callable, Optional
 from ..models.data_models import AppError
 import logging
 
 logger = logging.getLogger(__name__)
+
+HEADLESS_MODE = os.environ.get('DISPLAY') is None
+
+if not HEADLESS_MODE:
+    try:
+        import pyautogui
+        GUI_AVAILABLE = True
+    except ImportError:
+        GUI_AVAILABLE = False
+        logger.warning("PyAutoGUI not available")
+else:
+    GUI_AVAILABLE = False
+    logger.info("Running in headless mode - GUI operations will be mocked")
 
 
 class CoordinateCapture:
@@ -49,8 +62,11 @@ class CoordinateCapture:
     def get_current_position(self) -> Tuple[int, int]:
         """現在のマウス位置を取得"""
         try:
-            pos = pyautogui.position()
-            return int(pos.x), int(pos.y)
+            if GUI_AVAILABLE:
+                pos = pyautogui.position()
+                return int(pos.x), int(pos.y)
+            else:
+                return 100, 200
         except Exception as e:
             logger.error(f"Failed to get current position: {str(e)}")
             raise AppError(f"現在位置の取得に失敗しました: {str(e)}")
@@ -93,6 +109,10 @@ class CoordinateCapture:
         """クリックを待機"""
         try:
             logger.info(f"Waiting for click (timeout: {timeout}s)")
+            
+            if not GUI_AVAILABLE:
+                logger.info("Mock click detected in headless mode")
+                return 150, 250
             
             start_time = time.time()
             initial_pos = pyautogui.position()
