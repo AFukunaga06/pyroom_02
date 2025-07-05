@@ -1,0 +1,12 @@
+{
+  "api_key": "",
+  "input_path": "input.txt",
+  "output_path": "output.txt",
+  "checkd01_path": "checkd01.txt",
+  "checkd02_path": "checkd02.txt",
+  "google_credentials_path": "samplep20240906-5ae36c9a4acd.json",
+  "spreadsheet_id": "17Le1KA9nzMREt0Qp9_elM1OF1q8aSp-GDBZRPOntNI8",
+  "log_level": "INFO",
+  "max_retries": 3,
+  "timeout": 30
+}

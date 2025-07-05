@@ -1,0 +1,21 @@
+# Core dependencies
+customtkinter>=5.2.0
+gspread>=5.10.0
+google-auth>=2.22.0
+google-auth-oauthlib>=1.0.0
+google-auth-httplib2>=0.1.0
+pyperclip>=1.8.2
+pyautogui>=0.9.54
+requests>=2.31.0
+pandas>=2.0.0
+
+# Development dependencies
+pytest>=7.4.0
+pytest-cov>=4.1.0
+black>=23.7.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Optional dependencies for enhanced functionality
+Pillow>=10.0.0
+opencv-python>=4.8.0
